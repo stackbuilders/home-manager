@@ -101,7 +101,13 @@ let
         # WARNING: this file is generated from the nix.settings option in
         # your Home Manager configuration at $XDG_CONFIG_HOME/nix/nix.conf.
         # Do not edit it!
-        ${mkKeyValuePairs cfg.settings}
+        ${mkKeyValuePairs lib.mkMerge [
+          (lib.mkIf (cfg.binaryCaches != { }) {
+            substituters = lib.map (v: "https://${v}") (lib.attrNames cfg.binaryCaches);
+            trusted-public-keys = lib.mapAttrsToList (k: v: "${k}-1:${v}") cfg.binaryCaches;
+          })
+          cfg.settings
+        ]}
         ${cfg.extraOptions}
       '';
       checkPhase =
