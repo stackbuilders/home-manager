@@ -105,7 +105,7 @@ let
           lib.mkMerge [
             (lib.mkIf (cfg.binaryCaches != { }) {
               substituters = lib.map (v: "https://${v}") (lib.attrNames cfg.binaryCaches);
-              trusted-public-keys = lib.mapAttrsToList (k: v: "${k}-1:${v}") cfg.binaryCaches;
+              # trusted-public-keys = lib.mapAttrsToList (k: v: "${k}-1:${v}") cfg.binaryCaches;
             })
             cfg.settings
           ]
